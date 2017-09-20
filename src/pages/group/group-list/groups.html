@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-navbar primary>
+    <button ion-button menuToggle icon-only>
+      <ion-icon name='menu'></ion-icon>
+    </button>
+    <ion-title>
+      Groupes
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only color="primary" (click)="openGroupSearchPage()">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <button ion-item *ngFor="let group of groups" (click)="openGroupPage(group)">
+      {{ group.name }}
+    </button>
+  </ion-list>
+  <ion-fab right bottom>
+   <button ion-fab (click)="openNewGroupModal()">+</button>
+ </ion-fab>
+</ion-content>
