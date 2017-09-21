@@ -70,18 +70,16 @@ export class GroupProvider {
       });
     }
 
-    public createGroup(group: IGroup): void {
-      this.AuthenticationProvider.getCurrentUserData().subscribe(currentUser => {
-        if (group.name) {
-          group.users[currentUser.$key] = true;
-          group.super_admin = currentUser.$key;
-          this.DataProvider.push('groups', group).subscribe(groupId => {
-            let groupRef = {};
-            groupRef[groupId] = true;
-            this.DataProvider.update(`users/${currentUser.$key}/groups`, groupRef);
-          });
-        }
-      });
+    public createGroup(group: IGroup, userId: string): void {
+      if (group.name) {
+        group.users[userId] = true;
+        group.super_admin = userId;
+        this.DataProvider.push('groups', group).subscribe(groupId => {
+          let groupRef = {};
+          groupRef[groupId] = true;
+          this.DataProvider.update(`users/${userId}/groups`, groupRef);
+        });
+      }
     }
 
     public removeGroup(groupId: string): void {

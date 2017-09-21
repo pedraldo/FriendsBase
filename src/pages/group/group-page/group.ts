@@ -28,7 +28,10 @@ export class GroupPage {
     this.AuthenticationProvider.getCurrentUserData().subscribe(currentUserData => {
       this.currentUser = currentUserData;
     });
-    debugger;
     this.isAtLeastGroupAdmin = this.currentUser.$key === this.group.super_admin || this.group.admins.indexOf(this.currentUser.$key) > -1;
+  }
+
+  public addNewMember(): void {
+    console.log('Ajout de membre');
   }
 }

@@ -39,7 +39,7 @@ export class GroupListPage {
   }
 
   public openGroupPage(group: IGroup): void {
-    this.NavController.setRoot(GroupPage, group);
+    this.NavController.push(GroupPage, group);
   }
 
   public openGroupSearchPage(): void {

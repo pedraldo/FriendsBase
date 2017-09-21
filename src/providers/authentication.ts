@@ -23,7 +23,6 @@ export class AuthenticationProvider {
         this.AngularFire.auth.subscribe(authenticationData => {
             if (authenticationData) {
                 this.DataProvider.object('users/' + authenticationData.uid).subscribe(userData => {
-                    console.log('currentUserData : ', userData);
                     observer.next(userData);
                 });
             } else {

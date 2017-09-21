@@ -1,3 +1,4 @@
+import { AuthenticationProvider } from './../../../providers/authentication';
 import { Platform, ViewController } from 'ionic-angular';
 import { GroupProvider } from '../../../providers/group';
 import { Component } from '@angular/core';
@@ -6,10 +7,12 @@ import { Component } from '@angular/core';
   templateUrl: 'group-create.html'
 })
 export class GroupCreateModalPage {
+  private currentUser: any;
   public group: IGroup;
 
   constructor(
     private GroupProvider: GroupProvider,
+    private AuthenticationProvider: AuthenticationProvider,
     public Platform: Platform,
     public ViewController: ViewController
   ) {
@@ -24,9 +27,14 @@ export class GroupCreateModalPage {
     };
   }
 
+  ngOnInit(): void {
+    this.AuthenticationProvider.getCurrentUserData().subscribe(currentUserData => {
+      this.currentUser = currentUserData;
+    });
+  }
+
   public createGroup(): void {
-    console.log('Submit modal, creationGroup function should ve called here ...');
-    // this.GroupProvider.createGroup(this.group); FIX BUG: create infinite number of groups
+    this.GroupProvider.createGroup(this.group, this.currentUser.$key);
     this.dismiss();
   }
 
