@@ -15,6 +15,7 @@ import { GroupPage } from '../pages/group/group-page/group';
 import { GroupListPage } from '../pages/group/group-list/groups';
 import { GroupCreateModalPage } from '../pages/group/group-modal/group-create';
 import { GroupSearchPage } from '../pages/group/group-search/group-search';
+import { GroupInvitationPage } from '../pages/group/group-invitation/group-invitation';
 
 // providers
 import { AuthenticationProvider } from '../providers/authentication';
@@ -41,7 +42,8 @@ export const firebaseConfig = {
     GroupListPage,
     GroupPage,
     GroupCreateModalPage,
-    GroupSearchPage
+    GroupSearchPage,
+    GroupInvitationPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -60,7 +62,8 @@ export const firebaseConfig = {
     GroupListPage,
     GroupPage,
     GroupCreateModalPage,
-    GroupSearchPage
+    GroupSearchPage,
+    GroupInvitationPage
   ],
   providers: [
     {

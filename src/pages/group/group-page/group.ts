@@ -1,6 +1,7 @@
+import { GroupInvitationPage } from '../group-invitation/group-invitation';
 import { AuthenticationProvider } from '../../../providers/authentication';
 import { GroupProvider } from '../../../providers/group';
-import { NavParams } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { Component } from '@angular/core';
 
 @Component({
@@ -16,7 +17,8 @@ export class GroupPage {
   constructor(
     private NavParams: NavParams,
     private GroupProvider: GroupProvider,
-    private AuthenticationProvider: AuthenticationProvider
+    private AuthenticationProvider: AuthenticationProvider,
+    private NavController: NavController
   ) {
     this.group = this.NavParams.data;
   }
@@ -33,5 +35,9 @@ export class GroupPage {
 
   public addNewMember(): void {
     console.log('Ajout de membre');
+  }
+
+  public openGroupInvitationPage(group: IGroup): void {
+    this.NavController.push(GroupInvitationPage, group);
   }
 }
