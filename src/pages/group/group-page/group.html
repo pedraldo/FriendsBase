@@ -27,7 +27,7 @@
           </ion-avatar>
           <h2>{{groupUser.name}}</h2>
           <p>{{groupUser.email}}</p>
-          <ion-icon item-right name="star" *ngIf="currentUser.$key === group.super_admin"></ion-icon>
+          <ion-icon item-right name="star" *ngIf="groupUser.$key === group.super_admin"></ion-icon>
         </ion-item>
       </ion-list>
     </ion-card-content>

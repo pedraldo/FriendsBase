@@ -85,4 +85,15 @@ export class GroupProvider {
     public removeGroup(groupId: string): void {
       this.DataProvider.remove(`groups/${groupId}`);
     }
+
+    public addUserToGroup(userId: string, groupId: string) {
+      let groupRef = {};
+      let userRef = {};
+
+      groupRef[groupId] = true;
+      userRef[userId] = true;
+
+      this.DataProvider.update(`groups/${groupId}/users`, userRef);
+      this.DataProvider.update(`users/${userId}/groups`, groupRef);
+    }
 }
