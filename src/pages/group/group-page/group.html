@@ -28,6 +28,7 @@
           <h2>{{groupUser.name}}</h2>
           <p>{{groupUser.email}}</p>
           <ion-icon item-right name="star" *ngIf="groupUser.$key === group.super_admin"></ion-icon>
+          <button item-right ion-button outline color="danger" *ngIf="currentUserId !== groupUser.$key && currentUserId === group.super_admin" (click)="removeMemberFromCurrentGroup(groupUser.$key, group.$key)">X</button>
         </ion-item>
       </ion-list>
     </ion-card-content>

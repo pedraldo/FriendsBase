@@ -14,6 +14,7 @@ export class GroupInvitationPage {
   public isMemberSearched = false;
   public isMemberFound = false;
   public emailSearched: string;
+  public isMemberAdded = false;
 
   constructor(
     private NavParams: NavParams,
@@ -40,6 +41,8 @@ export class GroupInvitationPage {
   }
 
   public addUserToCurrentGroup(user: any) {
-    this.GroupProvider.addUserToGroup(user.$key, this.group.$key);
+    this.GroupProvider.addUserToGroup(user.$key, this.group.$key).then(() => {
+      this.isMemberAdded = true;
+    });
   }
 }

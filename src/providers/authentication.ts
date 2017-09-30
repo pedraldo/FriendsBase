@@ -24,6 +24,7 @@ export class AuthenticationProvider {
             if (authenticationData) {
                 this.DataProvider.object('users/' + authenticationData.uid).subscribe(userData => {
                     observer.next(userData);
+                    observer.complete();
                 });
             } else {
                 observer.error();
@@ -37,6 +38,7 @@ export class AuthenticationProvider {
         this.DataProvider.object(`users/${userId}`).subscribe(userData => {
           if (userData) {
             observer.next(userData);
+            observer.complete();
           } else {
             observer.error();
           }

@@ -22,6 +22,7 @@ export class GroupProvider {
         this.DataProvider.object('groups/' + groupId).subscribe(groupData => {
           if (groupData) {
             observer.next(groupData);
+            observer.complete();
           } else {
             observer.error();
           }
@@ -58,7 +59,7 @@ export class GroupProvider {
           if (userGroupsId) {
             let userGroups: IGroup[] = [];
             userGroupsId.forEach(groupId => {
-              this.getGroupData(groupId.$key).subscribe(groupData => {
+              this.getGroupData(groupId.$key).toPromise().then(groupData => {
                 userGroups.push(groupData);
               });
             });
@@ -86,14 +87,21 @@ export class GroupProvider {
       this.DataProvider.remove(`groups/${groupId}`);
     }
 
-    public addUserToGroup(userId: string, groupId: string) {
+    public addUserToGroup(userId: string, groupId: string): Promise<[void, void]> {
       let groupRef = {};
       let userRef = {};
 
       groupRef[groupId] = true;
       userRef[userId] = true;
 
-      this.DataProvider.update(`groups/${groupId}/users`, userRef);
-      this.DataProvider.update(`users/${userId}/groups`, groupRef);
+      return Promise.all([
+        this.DataProvider.update(`groups/${groupId}/users`, userRef),
+        this.DataProvider.update(`users/${userId}/groups`, groupRef)
+      ]);
+    }
+
+    public removeMemberFromGroup(userId: string, groupId: string) {
+      this.DataProvider.remove(`/users/${userId}/groups/${groupId}`);
+      this.DataProvider.remove(`/groups/${groupId}/users/${userId}`);
     }
 }

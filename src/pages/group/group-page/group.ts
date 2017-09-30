@@ -12,7 +12,8 @@ export class GroupPage {
   public group: IPersistedGroup;
   public groupUsers: any[];
   public currentUser: any;
-  public isAtLeastGroupAdmin: boolean;
+  public currentUserId = '';
+  public isAtLeastGroupAdmin = false;
 
   constructor(
     private NavParams: NavParams,
@@ -26,18 +27,19 @@ export class GroupPage {
   ngOnInit(): void {
     this.GroupProvider.getGroupUsers(this.group.$key).subscribe(groupUsers => {
       this.groupUsers = groupUsers;
+      this.AuthenticationProvider.getCurrentUserData().subscribe(currentUserData => {
+        this.currentUser = currentUserData;
+        this.currentUserId = currentUserData.$key;
+        this.isAtLeastGroupAdmin = this.currentUser.$key === this.group.super_admin;// || this.group.admins.indexOf(this.currentUser.$key) > -1;
+      });
     });
-    this.AuthenticationProvider.getCurrentUserData().subscribe(currentUserData => {
-      this.currentUser = currentUserData;
-    });
-    this.isAtLeastGroupAdmin = this.currentUser.$key === this.group.super_admin || this.group.admins.indexOf(this.currentUser.$key) > -1;
-  }
-
-  public addNewMember(): void {
-    console.log('Ajout de membre');
   }
 
   public openGroupInvitationPage(group: IGroup): void {
     this.NavController.push(GroupInvitationPage, group);
+  }
+
+  public removeMemberFromCurrentGroup(userId: string, groupId: string) {
+    this.GroupProvider.removeMemberFromGroup(userId, groupId);
   }
 }

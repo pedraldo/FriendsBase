@@ -39,7 +39,8 @@
       <ion-list>
         <ion-item *ngIf="isMemberSearched && isMemberFound">
           <ion-label itel-left>{{ memberFound.name }}</ion-label>
-          <button ion-button color="primary" outline item-right (click)="addUserToCurrentGroup(memberFound)">Ajouter</button>
+          <button *ngIf="!isMemberAdded" ion-button color="primary" outline item-right (click)="addUserToCurrentGroup(memberFound)">Ajouter</button>
+          <button *ngIf="isMemberAdded" ion-button color="secondary" outline item-right >Ajouté</button>
         </ion-item>
         <ion-item *ngIf="isMemberSearched && !isMemberFound">
           <ion-label>Aucun membre trouvé</ion-label>

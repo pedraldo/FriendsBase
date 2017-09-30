@@ -20,8 +20,8 @@ export class DataProvider {
 		});
 	}
 
-	public update(path: string, data: any): void {
-		this.AngularFire.database.object(path).update(data);
+	public update(path: string, data: any): firebase.Promise<void> {
+		return this.AngularFire.database.object(path).update(data);
 	}
 
 	public list(path: string): FirebaseListObservable<any> {
@@ -32,13 +32,7 @@ export class DataProvider {
 		return this.AngularFire.database.object(path);
 	}
 
-	public remove(path: string): Observable<any> {
-		return Observable.create(observer => {
-			this.AngularFire.database.object(path).remove().then(data => {
-				observer.next(data);
-			}, error => {
-				observer.next(error);
-			});
-		});
-	}
+	public remove(path: string): void {
+		this.AngularFire.database.object(path).remove();
+  }
  }
