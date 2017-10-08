@@ -43,7 +43,7 @@ export class LoginEmailPage {
 
         this.AuthenticationProvider.loginWithEmail(this.form).subscribe(data => {
             loading.dismiss();
-            this.NavController.push(HomePage);
+            this.NavController.setRoot(HomePage);
         }, error => {
             loading.dismiss();
             this.error = error;

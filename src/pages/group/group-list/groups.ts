@@ -1,7 +1,7 @@
 import { GroupSearchPage } from '../group-search/group-search';
 import { GroupPage } from '../group-page/group';
 import { GroupCreateModalPage } from '../group-modal/group-create';
-import { ModalController, NavController } from 'ionic-angular';
+import { Loading, LoadingController, ModalController, NavController } from 'ionic-angular';
 import { GroupProvider } from '../../../providers/group';
 import { AuthenticationProvider } from '../../../providers/authentication';
 import { Component } from '@angular/core';
@@ -13,13 +13,19 @@ import { Component } from '@angular/core';
 export class GroupListPage {
   public groups: IGroup[];
   public currentUser: any;
+  public loader: Loading
 
   constructor(
     private AuthenticationProvider: AuthenticationProvider,
     private GroupProvider: GroupProvider,
     private ModalController: ModalController,
-    private NavController: NavController
+    private NavController: NavController,
+    private LoadingController: LoadingController
   ) {
+    this.loader = this.LoadingController.create({
+      spinner: 'crescent'
+    });
+    this.loader.present();
     this.groups = [];
     this.AuthenticationProvider.getCurrentUserData().subscribe(currentUserData => {
       this.currentUser = currentUserData;
@@ -30,6 +36,7 @@ export class GroupListPage {
   public getCurrentUserGroups(): void {
     this.GroupProvider.getUserGroups(this.currentUser.$key).subscribe(currentUserGroups => {
       this.groups = currentUserGroups;
+      this.loader.dismiss();
     });
   }
 

@@ -37,12 +37,18 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
+        <ion-spinner *ngIf="isSearchInProgress" name="crescent"></ion-spinner>
         <ion-item *ngIf="isMemberSearched && isMemberFound">
           <ion-label itel-left>{{ memberFound.name }}</ion-label>
-          <button *ngIf="!isMemberAdded" ion-button color="primary" outline item-right (click)="addUserToCurrentGroup(memberFound)">Ajouter</button>
+          <button *ngIf="!isMemberAdded" ion-button color="primary" outline item-right (click)="addUserToCurrentGroup(memberFound)">
+            <span *ngIf="!isAddingInProgress">Ajouter</span>
+            <span>
+              <ion-spinner *ngIf="isAddingInProgress" name="crescent"></ion-spinner>
+            </span>
+          </button>
           <button *ngIf="isMemberAdded" ion-button color="secondary" outline item-right >Ajouté</button>
         </ion-item>
-        <ion-item *ngIf="isMemberSearched && !isMemberFound">
+        <ion-item *ngIf="isMemberSearched && !isMemberFound && !isSearchInProgress">
           <ion-label>Aucun membre trouvé</ion-label>
         </ion-item>
       </ion-list>
