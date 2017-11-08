@@ -1,6 +1,6 @@
-import { AuthenticationProvider } from './../../../providers/authentication';
+import { AuthenticationProvider } from './../../../../providers/authentication';
 import { Platform, ViewController } from 'ionic-angular';
-import { GroupProvider } from '../../../providers/group';
+import { GroupProvider } from '../../../../providers/group';
 import { Component } from '@angular/core';
 
 @Component({

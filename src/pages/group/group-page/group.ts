@@ -1,7 +1,8 @@
+import { GroupChangeAdminModalPage } from '../group-modal/group-change-admin/group-change-admin';
 import { GroupInvitationPage } from '../group-invitation/group-invitation';
 import { AuthenticationProvider } from '../../../providers/authentication';
 import { GroupProvider } from '../../../providers/group';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, ModalController } from 'ionic-angular';
 import { Component } from '@angular/core';
 
 @Component({
@@ -13,7 +14,7 @@ export class GroupPage {
   public groupUsers: any[];
   public currentUser: any;
   public currentUserId = '';
-  public isAtLeastGroupAdmin = false;
+  public isSuperAdmin = false;
   public areGroupUsersLoaded = false;
 
   constructor(
@@ -21,7 +22,8 @@ export class GroupPage {
     private GroupProvider: GroupProvider,
     private AuthenticationProvider: AuthenticationProvider,
     private NavController: NavController,
-    private AlertController: AlertController
+    private AlertController: AlertController,
+    private ModalController: ModalController
   ) {
     this.group = this.NavParams.data;
   }
@@ -33,7 +35,7 @@ export class GroupPage {
       this.AuthenticationProvider.getCurrentUserData().subscribe(currentUserData => {
         this.currentUser = currentUserData;
         this.currentUserId = currentUserData.$key;
-        this.isAtLeastGroupAdmin = this.currentUser.$key === this.group.super_admin;// || this.group.admins.indexOf(this.currentUser.$key) > -1;
+        this.isSuperAdmin = this.currentUser.$key === this.group.super_admin; // || this.group.admins.indexOf(this.currentUser.$key) > -1;
       });
     });
   }
@@ -60,5 +62,33 @@ export class GroupPage {
       ]
     }).present();
     // this.GroupProvider.removeMemberFromGroup(user.$key, group.$key);
+  }
+
+  public leaveGroup(): void {
+    let messageComplement = '';
+    if (this.isSuperAdmin && this.groupUsers.length > 1) {
+      messageComplement = "Vous êtes l'administrateur de ce groupe, si vous décidez de le quitter, vous devrez désigner un nouvel administrateur parmis les membres du groupe.";
+    }
+    this.AlertController.create({
+      title: 'Quitter le groupe  ?',
+      message: `Etes vous sûr de vouloir quitter le groupe ${this.group.name} ? ${messageComplement}`,
+      buttons: [
+        {
+          text: 'Oui',
+          handler: () => {
+            (messageComplement.length > 0) ? this.changeGroupSuperAdmin() : this.GroupProvider.removeMemberFromGroup(this.currentUserId, this.group.$key);
+          }
+        },
+        {
+          text: 'Non',
+          role: 'cancel'
+        }
+      ]
+    }).present();
+  }
+
+  public changeGroupSuperAdmin() {
+    let modal = this.ModalController.create(GroupChangeAdminModalPage, {group: this.group, groupUsers: this.groupUsers});
+    modal.present();
   }
 }

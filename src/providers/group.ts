@@ -100,8 +100,18 @@ export class GroupProvider {
       ]);
     }
 
-    public removeMemberFromGroup(userId: string, groupId: string) {
+    public removeMemberFromGroup(userId: string, groupId: string): void {
       this.DataProvider.remove(`/users/${userId}/groups/${groupId}`);
       this.DataProvider.remove(`/groups/${groupId}/users/${userId}`);
+    }
+
+    public isSuperAdminOfGroup(userId: string, groupId: string): Promise<boolean> {
+      return this.getGroupData(groupId).toPromise().then(groupData => {
+        return (userId === groupData.super_admin);
+      });
+    }
+
+    public updateGroupSuperAdmin(groupId, userId): firebase.Promise<void> {
+      return this.DataProvider.update(`groups/${groupId}`, {super_admin: userId});
     }
 }

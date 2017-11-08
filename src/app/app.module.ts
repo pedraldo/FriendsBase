@@ -1,3 +1,4 @@
+import { GroupChangeAdminModalPage } from '../pages/group/group-modal/group-change-admin/group-change-admin';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
@@ -13,7 +14,7 @@ import { SignUpPage } from '../pages/authentication/sign-up/sign-up';
 import { HomePage } from '../pages/home/home';
 import { GroupPage } from '../pages/group/group-page/group';
 import { GroupListPage } from '../pages/group/group-list/groups';
-import { GroupCreateModalPage } from '../pages/group/group-modal/group-create';
+import { GroupCreateModalPage } from '../pages/group/group-modal/group-create/group-create';
 import { GroupSearchPage } from '../pages/group/group-search/group-search';
 import { GroupInvitationPage } from '../pages/group/group-invitation/group-invitation';
 
@@ -43,7 +44,8 @@ export const firebaseConfig = {
     GroupPage,
     GroupCreateModalPage,
     GroupSearchPage,
-    GroupInvitationPage
+    GroupInvitationPage,
+    GroupChangeAdminModalPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -63,7 +65,8 @@ export const firebaseConfig = {
     GroupPage,
     GroupCreateModalPage,
     GroupSearchPage,
-    GroupInvitationPage
+    GroupInvitationPage,
+    GroupChangeAdminModalPage
   ],
   providers: [
     {

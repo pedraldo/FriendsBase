@@ -1,6 +1,6 @@
 import { GroupSearchPage } from '../group-search/group-search';
 import { GroupPage } from '../group-page/group';
-import { GroupCreateModalPage } from '../group-modal/group-create';
+import { GroupCreateModalPage } from '../group-modal/group-create/group-create';
 import { Loading, LoadingController, ModalController, NavController } from 'ionic-angular';
 import { GroupProvider } from '../../../providers/group';
 import { AuthenticationProvider } from '../../../providers/authentication';

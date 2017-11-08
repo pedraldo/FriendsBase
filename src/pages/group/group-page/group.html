@@ -34,4 +34,6 @@
       <ion-spinner name="crescent" *ngIf="!areGroupUsersLoaded"></ion-spinner>
     </ion-card-content>
   </ion-card>
+  <button *ngIf="isSuperAdmin" full ion-button color="warning" (click)="changeGroupSuperAdmin()">Désigner un nouvel admin</button>
+  <button full ion-button color="danger" (click)="leaveGroup()">Quitter le groupe</button>
 </ion-content>
