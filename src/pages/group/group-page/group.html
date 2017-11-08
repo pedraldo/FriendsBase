@@ -14,7 +14,7 @@
     <ion-card-header>
       <ion-item>
         <ion-label item-left>Membres</ion-label>
-        <ion-icon item-right name="add" *ngIf="currentUser.$key === group.super_admin" (click)="openGroupInvitationPage(group)"></ion-icon>
+        <ion-icon item-right name="add" *ngIf="isSuperAdmin" (click)="openGroupInvitationPage(group)"></ion-icon>
       </ion-item>
     </ion-card-header>
     <ion-card-content>
@@ -26,7 +26,7 @@
           <h2>{{groupUser.name}}</h2>
           <p>{{groupUser.email}}</p>
           <ion-icon item-right name="star" *ngIf="groupUser.$key === group.super_admin"></ion-icon>
-          <button item-right ion-button outline color="danger" *ngIf="currentUserId !== groupUser.$key && currentUserId === group.super_admin" (click)="removeMemberFromCurrentGroup(groupUser, group)">
+          <button item-right ion-button outline color="danger" *ngIf="currentUserId !== groupUser.$key && isSuperAdmin" (click)="removeMemberFromCurrentGroup(groupUser, group)">
             <ion-icon name="close"></ion-icon>
           </button>
         </ion-item>

@@ -17,6 +17,8 @@ export class GroupPage {
   public isSuperAdmin = false;
   public areGroupUsersLoaded = false;
 
+  private isRemovingCurrentUserFromGroup = false;
+
   constructor(
     private NavParams: NavParams,
     private GroupProvider: GroupProvider,
@@ -76,7 +78,12 @@ export class GroupPage {
         {
           text: 'Oui',
           handler: () => {
-            (messageComplement.length > 0) ? this.changeGroupSuperAdmin() : this.GroupProvider.removeMemberFromGroup(this.currentUserId, this.group.$key);
+            if (messageComplement.length > 0) {
+              this.isRemovingCurrentUserFromGroup = true;
+              this.changeGroupSuperAdmin();
+            } else {
+              this.GroupProvider.removeMemberFromGroup(this.currentUserId, this.group.$key);
+            }
           }
         },
         {
@@ -87,8 +94,17 @@ export class GroupPage {
     }).present();
   }
 
-  public changeGroupSuperAdmin() {
-    let modal = this.ModalController.create(GroupChangeAdminModalPage, {group: this.group, groupUsers: this.groupUsers});
+  public changeGroupSuperAdmin(): void {
+    let modal = this.ModalController.create(GroupChangeAdminModalPage, { group: this.group, groupUsers: this.groupUsers });
     modal.present();
+    modal.onDidDismiss(newAdminId => {
+      if (!!newAdminId) {
+        this.group.super_admin = newAdminId;
+        this.isSuperAdmin = this.currentUser.$key === this.group.super_admin;
+        if (this.isRemovingCurrentUserFromGroup) {
+          this.GroupProvider.removeMemberFromGroup(this.currentUserId, this.group.$key);
+        }
+      }
+    })
   }
 }

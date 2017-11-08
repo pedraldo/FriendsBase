@@ -44,7 +44,7 @@ export class GroupChangeAdminModalPage {
           text: 'Oui',
           handler: () => {
             this.GroupProvider.updateGroupSuperAdmin(this.group.$key, newAdminChosen.$key);
-            this.dismiss();
+            this.dismiss(newAdminChosen.$key);
           }
         },
         {
@@ -55,7 +55,7 @@ export class GroupChangeAdminModalPage {
     }).present();
   }
 
-  public dismiss(): void {
-    this.ViewController.dismiss();
+  public dismiss(data?: null | string): void {
+    this.ViewController.dismiss(data);
   }
 }
