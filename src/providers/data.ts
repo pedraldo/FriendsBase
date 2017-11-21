@@ -34,5 +34,5 @@ export class DataProvider {
 
 	public remove(path: string): void {
 		this.AngularFire.database.object(path).remove();
-  }
- }
+	}
+}

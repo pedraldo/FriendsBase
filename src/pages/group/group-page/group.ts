@@ -1,9 +1,11 @@
+import { Observable } from 'rxjs/Observable';
 import { GroupChangeAdminModalPage } from '../group-modal/group-change-admin/group-change-admin';
 import { GroupInvitationPage } from '../group-invitation/group-invitation';
 import { AuthenticationProvider } from '../../../providers/authentication';
 import { GroupProvider } from '../../../providers/group';
-import { NavController, NavParams, AlertController, ModalController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, ModalController, ToastController } from 'ionic-angular';
 import { Component } from '@angular/core';
+import * as _ from 'lodash';
 
 @Component({
   templateUrl: 'group.html',
@@ -12,10 +14,14 @@ import { Component } from '@angular/core';
 export class GroupPage {
   public group: IPersistedGroup;
   public groupUsers: any[];
+  public joinRequestUsers: any[] = [];
   public currentUser: any;
+  public superAdminUser: any;
   public currentUserId = '';
-  public isSuperAdmin = false;
+  public isCurrentUserSuperAdmin = false;
+  public isCurrentUserMemberOfGroup = false;
   public areGroupUsersLoaded = false;
+  public hasCurrentUserAlreadyMadeJoinRequest = false;
 
   private isRemovingCurrentUserFromGroup = false;
 
@@ -25,7 +31,8 @@ export class GroupPage {
     private AuthenticationProvider: AuthenticationProvider,
     private NavController: NavController,
     private AlertController: AlertController,
-    private ModalController: ModalController
+    private ModalController: ModalController,
+    private ToastController: ToastController
   ) {
     this.group = this.NavParams.data;
   }
@@ -37,7 +44,19 @@ export class GroupPage {
       this.AuthenticationProvider.getCurrentUserData().subscribe(currentUserData => {
         this.currentUser = currentUserData;
         this.currentUserId = currentUserData.$key;
-        this.isSuperAdmin = this.currentUser.$key === this.group.super_admin; // || this.group.admins.indexOf(this.currentUser.$key) > -1;
+        this.isCurrentUserMemberOfGroup = !!this.groupUsers.find(groupUser => groupUser.$key === this.currentUserId);
+        this.isCurrentUserSuperAdmin = this.isCurrentUserMemberOfGroup ? this.currentUser.$key === this.group.super_admin : false; // || this.group.admins.indexOf(this.currentUser.$key) > -1;
+        this.superAdminUser = !this.isCurrentUserSuperAdmin ? this.groupUsers.find(groupUser => groupUser.$key === this.group.super_admin) : this.currentUser;
+      
+        let obsvArray: Observable<any>[] = [];
+        _.forEach(this.group.joinRequests, (value, key) => {
+          if (key === this.currentUserId) this.hasCurrentUserAlreadyMadeJoinRequest = true;
+          obsvArray.push(this.AuthenticationProvider.getUserData(key));
+        });
+        Observable.forkJoin(obsvArray).subscribe(joinRequestUsers => {
+          console.log(joinRequestUsers);
+          this.joinRequestUsers = joinRequestUsers;
+        });
       });
     });
   }
@@ -68,7 +87,7 @@ export class GroupPage {
 
   public leaveGroup(): void {
     let messageComplement = '';
-    if (this.isSuperAdmin && this.groupUsers.length > 1) {
+    if (this.isCurrentUserSuperAdmin && this.groupUsers.length > 1) {
       messageComplement = "Vous êtes l'administrateur de ce groupe, si vous décidez de le quitter, vous devrez désigner un nouvel administrateur parmis les membres du groupe.";
     }
     this.AlertController.create({
@@ -100,11 +119,40 @@ export class GroupPage {
     modal.onDidDismiss(newAdminId => {
       if (!!newAdminId) {
         this.group.super_admin = newAdminId;
-        this.isSuperAdmin = this.currentUser.$key === this.group.super_admin;
+        this.isCurrentUserSuperAdmin = this.currentUser.$key === this.group.super_admin;
         if (this.isRemovingCurrentUserFromGroup) {
           this.GroupProvider.removeMemberFromGroup(this.currentUserId, this.group.$key);
         }
       }
     })
+  }
+
+  public sendGroupJoinRequest(): void {
+    this.hasCurrentUserAlreadyMadeJoinRequest = true;
+    if (!this.isCurrentUserMemberOfGroup) {
+      this.GroupProvider.createNewGroupJoinRequest(this.group.$key, this.currentUserId)
+    }
+  }
+
+  public acceptJoinRequest(userId: string, userName: string): void {
+    this.joinRequestUsers = this.joinRequestUsers.filter(joinRequestUser => joinRequestUser.$key !== userId);
+    this.GroupProvider.removeGroupJoinRequest(this.group.$key, userId);
+    this.GroupProvider.addUserToGroup(userId, this.group.$key).then(() => {
+      let toast = this.ToastController.create({
+        message: `${userName} vient d'être ajouté au groupe ${this.group.name}.`,
+        duration: 2000
+      });
+      toast.present();
+    });
+  }
+
+  public refuseJoinRequest(userId: string, userName: string): void {
+    this.joinRequestUsers = this.joinRequestUsers.filter(joinRequestUser => joinRequestUser.$key !== userId);
+    this.GroupProvider.removeGroupJoinRequest(this.group.$key, userId);
+    let toast = this.ToastController.create({
+      message: `La demande d'intégration de ${userName} au groupe ${this.group.name} vient d'être refusée.`,
+      duration: 2000
+    });
+    toast.present();
   }
 }

@@ -11,8 +11,10 @@ interface IGroup {
   };
   super_admin: string;
   admins: string[];
-  join_requests: string[];
-  join_invitations: string[];
+  joinRequests: {
+    [key: string]: boolean;
+  };
+  joinInvitations: string[];
 }
 
 interface IPersistedGroup extends IGroup, IPersistedResource {}

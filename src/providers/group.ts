@@ -31,17 +31,16 @@ export class GroupProvider {
     }
 
     public getGroupUsers(groupId: string): Observable<any[]> {
-      let groupUsers: any[];
       return Observable.create(observer => {
         this.DataProvider.list(`groups/${groupId}/users`).subscribe(groupUsersId => {
+          let obsvArray: Observable<any>[] = [];
           if (groupUsersId) {
-            groupUsers = [];
             groupUsersId.forEach(userId => {
-              this.AuthenticationProvider.getUserData(userId.$key).subscribe(userData => {
-                groupUsers.push(userData);
-              });
+              obsvArray.push(this.AuthenticationProvider.getUserData(userId.$key));
             });
-            observer.next(groupUsers);
+            Observable.forkJoin(obsvArray).subscribe(groupUsers => {
+              observer.next(groupUsers);
+            });
           } else {
             observer.error();
           }
@@ -105,13 +104,27 @@ export class GroupProvider {
       this.DataProvider.remove(`/groups/${groupId}/users/${userId}`);
     }
 
-    public isSuperAdminOfGroup(userId: string, groupId: string): Promise<boolean> {
+    public isMemberSuperAdminOfGroup(userId: string, groupId: string): Promise<boolean> {
       return this.getGroupData(groupId).toPromise().then(groupData => {
         return (userId === groupData.super_admin);
       });
     }
 
-    public updateGroupSuperAdmin(groupId, userId): firebase.Promise<void> {
+    public updateGroupSuperAdmin(groupId: string, userId: string): firebase.Promise<void> {
       return this.DataProvider.update(`groups/${groupId}`, {super_admin: userId});
+    }
+
+    public createNewGroupJoinRequest(groupId: string, userId: string): firebase.Promise<void> {
+      let userRef = {};
+      userRef[userId] = true;
+      return this.DataProvider.update(`groups/${groupId}/joinRequests`, userRef);
+    }
+
+    public getGroupJoinRequests(groupId: string): Observable<any> {
+      return this.DataProvider.list(`groups/${groupId}/joinRequests`);
+    }
+
+    public removeGroupJoinRequest(groupId: string, userId: string): void {
+      return this.DataProvider.remove(`/groups/${groupId}/joinRequests/${userId}`);
     }
 }

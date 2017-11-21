@@ -22,8 +22,8 @@ export class GroupCreateModalPage {
       users: {},
       super_admin: '',
       admins: [],
-      join_requests: [],
-      join_invitations: []
+      joinRequests: {},
+      joinInvitations: []
     };
   }
 

@@ -50,6 +50,6 @@ export class GroupListPage {
   }
 
   public openGroupSearchPage(): void {
-    this.NavController.push(GroupSearchPage);
+    this.NavController.push(GroupSearchPage, this.currentUser);
   }
 }
