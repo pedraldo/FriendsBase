@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { AngularFire } from 'angularfire2';
 import { Observable } from 'rxjs/Observable';
+import * as _ from 'lodash';
 
 import { DataProvider } from './data';
 
@@ -120,11 +121,21 @@ export class GroupProvider {
       return this.DataProvider.update(`groups/${groupId}/joinRequests`, userRef);
     }
 
-    public getGroupJoinRequests(groupId: string): Observable<any> {
-      return this.DataProvider.list(`groups/${groupId}/joinRequests`);
-    }
-
     public removeGroupJoinRequest(groupId: string, userId: string): void {
       return this.DataProvider.remove(`/groups/${groupId}/joinRequests/${userId}`);
+    }
+
+    public getGroupJoinRequestsUsers(groupId: string): Observable<any> {
+      return Observable.create(observer => {
+        this.DataProvider.list(`groups/${groupId}/joinRequests`).subscribe(joinRequests => {
+          let obsvArray: Observable<any>[] = [];
+          _.forEach(joinRequests, joinRequest => {
+            obsvArray.push(this.AuthenticationProvider.getUserData(joinRequest.$key));
+          });
+          Observable.forkJoin(obsvArray).subscribe(joinRequestUsers => {
+            observer.next(joinRequestUsers);
+          });
+        })
+      });
     }
 }

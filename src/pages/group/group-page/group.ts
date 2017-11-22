@@ -1,11 +1,9 @@
-import { Observable } from 'rxjs/Observable';
 import { GroupChangeAdminModalPage } from '../group-modal/group-change-admin/group-change-admin';
 import { GroupInvitationPage } from '../group-invitation/group-invitation';
 import { AuthenticationProvider } from '../../../providers/authentication';
 import { GroupProvider } from '../../../providers/group';
 import { NavController, NavParams, AlertController, ModalController, ToastController } from 'ionic-angular';
 import { Component } from '@angular/core';
-import * as _ from 'lodash';
 
 @Component({
   templateUrl: 'group.html',
@@ -48,14 +46,9 @@ export class GroupPage {
         this.isCurrentUserSuperAdmin = this.isCurrentUserMemberOfGroup ? this.currentUser.$key === this.group.super_admin : false; // || this.group.admins.indexOf(this.currentUser.$key) > -1;
         this.superAdminUser = !this.isCurrentUserSuperAdmin ? this.groupUsers.find(groupUser => groupUser.$key === this.group.super_admin) : this.currentUser;
       
-        let obsvArray: Observable<any>[] = [];
-        _.forEach(this.group.joinRequests, (value, key) => {
-          if (key === this.currentUserId) this.hasCurrentUserAlreadyMadeJoinRequest = true;
-          obsvArray.push(this.AuthenticationProvider.getUserData(key));
-        });
-        Observable.forkJoin(obsvArray).subscribe(joinRequestUsers => {
-          console.log(joinRequestUsers);
+        this.GroupProvider.getGroupJoinRequestsUsers(this.group.$key).subscribe(joinRequestUsers => {
           this.joinRequestUsers = joinRequestUsers;
+          this.hasCurrentUserAlreadyMadeJoinRequest = !!this.joinRequestUsers.find(joinRequestUser => joinRequestUser.$key === this.currentUserId);
         });
       });
     });
@@ -82,7 +75,6 @@ export class GroupPage {
         }
       ]
     }).present();
-    // this.GroupProvider.removeMemberFromGroup(user.$key, group.$key);
   }
 
   public leaveGroup(): void {
@@ -140,7 +132,7 @@ export class GroupPage {
     this.GroupProvider.addUserToGroup(userId, this.group.$key).then(() => {
       let toast = this.ToastController.create({
         message: `${userName} vient d'être ajouté au groupe ${this.group.name}.`,
-        duration: 2000
+        duration: 4000
       });
       toast.present();
     });
@@ -151,7 +143,7 @@ export class GroupPage {
     this.GroupProvider.removeGroupJoinRequest(this.group.$key, userId);
     let toast = this.ToastController.create({
       message: `La demande d'intégration de ${userName} au groupe ${this.group.name} vient d'être refusée.`,
-      duration: 2000
+      duration: 4000
     });
     toast.present();
   }

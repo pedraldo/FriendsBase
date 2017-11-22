@@ -74,6 +74,6 @@
   </ion-card>
   <button *ngIf="isCurrentUserSuperAdmin" full ion-button color="warning" (click)="changeGroupSuperAdmin()">Désigner un nouvel admin</button>
   <button *ngIf="!isCurrentUserMemberOfGroup" full ion-button color="warning" (click)="sendGroupJoinRequest()" [disabled]="hasCurrentUserAlreadyMadeJoinRequest">Intégrer le groupe</button>
-  <p padding *ngIf="hasCurrentUserAlreadyMadeJoinRequest && !isCurrentUserMemberOfGroup">Vous serez intégrer au groupe dès l'accord de son administrateur</p>
+  <p padding *ngIf="hasCurrentUserAlreadyMadeJoinRequest && !isCurrentUserMemberOfGroup">Vous serez intégré au groupe dès l'accord de son administrateur</p>
   <button full ion-button color="danger" (click)="leaveGroup()" *ngIf="isCurrentUserMemberOfGroup">Quitter le groupe</button>
 </ion-content>

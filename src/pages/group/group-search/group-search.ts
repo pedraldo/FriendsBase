@@ -1,9 +1,8 @@
 import { NavController, NavParams } from 'ionic-angular';
 import { GroupProvider } from '../../../providers/group';
 import { AuthenticationProvider } from '../../../providers/authentication';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { GroupPage } from '../group-page/group';
-import { Searchbar } from 'ionic-angular/components/searchbar/searchbar';
 
 @Component({
   templateUrl: 'group-search.html',
@@ -14,8 +13,6 @@ export class GroupSearchPage {
   public groups: IGroup[] = [];
   public filteredGroups: IGroup[] = [];
 
-  @ViewChild('searchbar') Searchbar: Searchbar;
-
   constructor(
     private NavParams: NavParams,
     private AuthenticationProvider: AuthenticationProvider,
@@ -24,10 +21,6 @@ export class GroupSearchPage {
   ) {
     this.getAllGroups();
     this.currentUser = this.NavParams.data;
-  }
-  
-  ngOnInit(): void {
-    this.Searchbar.setFocus();
   }
 
   private getAllGroups(): void {

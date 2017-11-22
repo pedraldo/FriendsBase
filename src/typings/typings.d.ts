@@ -1,19 +1,20 @@
+// Global
 interface IPersistedResource {
   $key: string;
+}
+
+interface IRelationObject {
+  [key: string]: boolean;
 }
 
 // Groups
 interface IGroup {
   name: string;
   description: string;
-  users: {
-    [key: string]: boolean;
-  };
+  users: IRelationObject;
   super_admin: string;
   admins: string[];
-  joinRequests: {
-    [key: string]: boolean;
-  };
+  joinRequests: IRelationObject;
   joinInvitations: string[];
 }
 
