@@ -8,6 +8,8 @@ import { Page2 } from '../pages/page2/page2';
 import { HomePage } from '../pages/home/home'
 import { AuthenticationPage } from '../pages/authentication/home/home'
 import { GroupListPage } from '../pages/group/group-list/groups';
+import { ProfilePage } from './../pages/profile/profile';
+import { ListListPage } from './../pages/list/list-list/lists';
 
 import { DataProvider } from '../providers/data';
 import { AuthenticationProvider } from '../providers/authentication';
@@ -63,6 +65,14 @@ export class MyApp {
 
   public openGroupsPage(): void {
     this.nav.setRoot(GroupListPage);
+  }
+
+  public openListsPage(): void {
+    this.nav.setRoot(ListListPage, this.user.$key);
+  }
+
+  public openProfilePage(): void {
+    this.nav.setRoot(ProfilePage, [this.user.$key, true]);
   }
 
   public logout(): void {

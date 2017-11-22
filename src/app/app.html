@@ -18,9 +18,16 @@
         <ion-icon name="person-stalker" item-left></ion-icon>
         Groupes
       </button>
+      <button menuClose ion-item detail-none (click)="openProfilePage()">
+        <ion-icon name="person" item-left></ion-icon>
+        Profil
+      </button>
+      <button menuClose ion-item detail-none (click)="openListsPage()">
+        <ion-icon name="clipboard" item-left></ion-icon>
+        Listes
+      </button>
     </ion-list>
   </ion-content>
-
 </ion-menu>
 
 <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
