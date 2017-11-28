@@ -1,3 +1,4 @@
+import { ProfilePage } from './../../profile/profile';
 import { GroupChangeAdminModalPage } from '../group-modal/group-change-admin/group-change-admin';
 import { GroupInvitationPage } from '../group-invitation/group-invitation';
 import { AuthenticationProvider } from '../../../providers/authentication';
@@ -146,5 +147,9 @@ export class GroupPage {
       duration: 4000
     });
     toast.present();
+  }
+
+  public openProfilePage(userId: string): void {
+    this.NavController.push(ProfilePage, [userId, userId === this.currentUserId]);
   }
 }

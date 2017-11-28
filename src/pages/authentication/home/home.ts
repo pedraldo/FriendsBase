@@ -1,3 +1,4 @@
+import { Storage } from '@ionic/storage';
 import { HomePage } from '../../home/home';
 import { LoginEmailPage } from '../login-email/login-email';
 import { SignUpPage } from '../sign-up/sign-up';
@@ -17,7 +18,8 @@ export class AuthenticationPage {
     constructor(
         private NavController: NavController,
         private AuthenticationProvider: AuthenticationProvider,
-        private ToastController: ToastController
+        private ToastController: ToastController,
+        private Storage: Storage
     ) {
 
     }
@@ -36,6 +38,7 @@ export class AuthenticationPage {
 
     public loginUserWithFacebook(): void {
         this.AuthenticationProvider.loginWithFacebook().subscribe(data => {
+            this.Storage.set('currentUserId', data.uid);
             this.NavController.setRoot(HomePage);
         }, error => {
             this.error = error;

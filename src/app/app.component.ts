@@ -1,3 +1,4 @@
+import { Storage } from '@ionic/storage';
 import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
@@ -26,6 +27,7 @@ export class MyApp {
 
   constructor(
     private platform: Platform,
+    private Storage: Storage,
     protected DataProvider: DataProvider,
     protected AuthenticationProvider: AuthenticationProvider
   ) {
@@ -68,11 +70,11 @@ export class MyApp {
   }
 
   public openListsPage(): void {
-    this.nav.setRoot(ListListPage, this.user.$key);
+    this.Storage.get('currentUserId').then(currentUserId => this.nav.setRoot(ListListPage, [currentUserId, true]));
   }
 
   public openProfilePage(): void {
-    this.nav.setRoot(ProfilePage, [this.user.$key, true]);
+    this.Storage.get('currentUserId').then(currentUserId => this.nav.setRoot(ProfilePage, [currentUserId, true]));
   }
 
   public logout(): void {

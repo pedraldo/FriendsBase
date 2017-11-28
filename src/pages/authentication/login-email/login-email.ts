@@ -1,3 +1,4 @@
+import { Storage } from '@ionic/storage';
 import { HomePage } from '../../home/home';
 import { SignUpPage } from '../sign-up/sign-up';
 import { ForgotPasswordPage } from '../forgot-password/forgot-password';
@@ -19,7 +20,8 @@ export class LoginEmailPage {
         private NavController: NavController,
         private AuthenticationProvider: AuthenticationProvider,
         private LoadingController: LoadingController,
-        private ToastController: ToastController
+        private ToastController: ToastController,
+        private Storage: Storage
     ) {
         this.form = {
             email: '',
@@ -42,6 +44,7 @@ export class LoginEmailPage {
         loading.present();
 
         this.AuthenticationProvider.loginWithEmail(this.form).subscribe(data => {
+            this.Storage.set('currentUserId', data.uid);
             loading.dismiss();
             this.NavController.setRoot(HomePage);
         }, error => {

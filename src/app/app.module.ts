@@ -1,4 +1,3 @@
-import { GroupChangeAdminModalPage } from '../pages/group/group-modal/group-change-admin/group-change-admin';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
@@ -18,6 +17,7 @@ import { GroupListPage } from '../pages/group/group-list/groups';
 import { GroupCreateModalPage } from '../pages/group/group-modal/group-create/group-create';
 import { GroupSearchPage } from '../pages/group/group-search/group-search';
 import { GroupInvitationPage } from '../pages/group/group-invitation/group-invitation';
+import { GroupChangeAdminModalPage } from '../pages/group/group-modal/group-change-admin/group-change-admin';
 import { ProfilePage } from './../pages/profile/profile';
 import { ListListPage } from './../pages/list/list-list/lists';
 
@@ -25,6 +25,7 @@ import { ListListPage } from './../pages/list/list-list/lists';
 import { AuthenticationProvider } from '../providers/authentication';
 import { DataProvider } from '../providers/data';
 import { GroupProvider } from '../providers/group';
+import { RelationProvider } from './../providers/relation';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyDUNhm1qZ_dSXlA0-TO7rkWQCX6m86XRzM',
@@ -83,7 +84,8 @@ export const firebaseConfig = {
     },
     DataProvider,
     AuthenticationProvider,
-    GroupProvider
+    GroupProvider,
+    RelationProvider
   ]
 })
 export class AppModule {}

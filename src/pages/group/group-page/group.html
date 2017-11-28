@@ -28,7 +28,7 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list *ngIf="areGroupUsersLoaded && isCurrentUserMemberOfGroup">
-        <ion-item *ngFor="let groupUser of groupUsers">
+        <ion-item *ngFor="let groupUser of groupUsers" (click)="openProfilePage(groupUser.$key)">
           <ion-avatar item-left>
             <img src="{{groupUser.image}}">
           </ion-avatar>

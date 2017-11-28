@@ -13,6 +13,5 @@ export class ListListPage {
   }
 
   ngOnInit(): void {
-    debugger;
   }
 }
