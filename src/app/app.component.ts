@@ -11,6 +11,7 @@ import { AuthenticationPage } from '../pages/authentication/home/home'
 import { GroupListPage } from '../pages/group/group-list/groups';
 import { ProfilePage } from './../pages/profile/profile';
 import { ListListPage } from './../pages/list/list-list/lists';
+import { RelationshipPage } from './../pages/relationship/relationship';
 
 import { DataProvider } from '../providers/data';
 import { AuthenticationProvider } from '../providers/authentication';
@@ -75,6 +76,10 @@ export class MyApp {
 
   public openProfilePage(): void {
     this.Storage.get('currentUserId').then(currentUserId => this.nav.setRoot(ProfilePage, [currentUserId, true]));
+  }
+
+  public openRelationshipsPage(): void {
+    this.Storage.get('currentUserId').then(currentUserId => this.nav.setRoot(RelationshipPage, [currentUserId, true]));
   }
 
   public logout(): void {

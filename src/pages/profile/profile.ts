@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { NavParams, NavController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { AuthenticationProvider } from './../../providers/authentication';
-import { RelationProvider } from './../../providers/relation';
+import { RelationshipProvider } from './../../providers/relationship';
 import { GroupProvider } from '../../providers/group';
 import { GroupPage } from '../group/group-page/group';
 import * as _ from 'lodash';
@@ -17,17 +17,17 @@ export class ProfilePage {
     public userId: string;
     public currentUserId: string;
     public userGroups: IGroup[];
-    public userRelations: IRelationObject;
-    public userRelationsData: any[];
+    public userRelationships: IRelationObject;
+    public userRelationshipsData: any[];
     public isCurrentUserProfile: boolean;
-    public isCurrentUserRelation: boolean;
+    public isCurrentUserRelationship: boolean;
 
     constructor(
         private NavParams: NavParams,
         private NavController: NavController,
         private AuthenticationProvider: AuthenticationProvider,
         private GroupProvider: GroupProvider,
-        private RelationProvider: RelationProvider,
+        private RelationshipProvider: RelationshipProvider,
         private Storage: Storage
     ) {
         this.userId = this.NavParams.data[0];
@@ -35,7 +35,7 @@ export class ProfilePage {
         if (this.isCurrentUserProfile) {
             this.currentUserId = this.userId;
         }
-        this.isCurrentUserRelation = false;
+        this.isCurrentUserRelationship = false;
     }
 
     ngOnInit(): void {
@@ -52,20 +52,20 @@ export class ProfilePage {
 
         });
         
-        this.RelationProvider.getUserRelations(this.userId).subscribe(userRelations => {
+        this.RelationshipProvider.getUserRelationships(this.userId).subscribe(userRelationships => {
             if (this.isCurrentUserProfile) {
                 let obsvArray: Observable<any>[] = [];
-                _.forEach(userRelations, (value, key) => {
+                _.forEach(userRelationships, (value, key) => {
                     obsvArray.push(this.AuthenticationProvider.getUserData(key));
                 });
-                Observable.forkJoin(obsvArray).subscribe(userRelationsData => {
-                    this.userRelationsData = userRelationsData;
+                Observable.forkJoin(obsvArray).subscribe(userRelationshipsData => {
+                    this.userRelationshipsData = userRelationshipsData;
                 });
             } else {
                 this.Storage.get('currentUserId').then(currentUserId => {
                     this.currentUserId = currentUserId;
-                    this.RelationProvider.isUser1InUser2Relations(this.user.$key, currentUserId).subscribe(isCurrentUserRelation => {
-                        this.isCurrentUserRelation = isCurrentUserRelation;
+                    this.RelationshipProvider.isUser1InUser2Relationships(this.user.$key, currentUserId).subscribe(isCurrentUserRelationship => {
+                        this.isCurrentUserRelationship = isCurrentUserRelationship;
                     })
                 });
             }
@@ -77,12 +77,12 @@ export class ProfilePage {
     }
 
     public addUserToRelations(userId: string): firebase.Promise<void> {
-        this.isCurrentUserRelation = true;
-        return this.RelationProvider.addUser1InUser2Relations(userId, this.currentUserId);
+        this.isCurrentUserRelationship = true;
+        return this.RelationshipProvider.addUser1InUser2Relationships(userId, this.currentUserId);
     }
 
     public removeUserFromRelations(userId: string): void {
-        this.isCurrentUserRelation = false;
-        return this.RelationProvider.removeUser1FromUser2Realtions(userId, this.currentUserId);
+        this.isCurrentUserRelationship = false;
+        return this.RelationshipProvider.removeUser1FromUser2Realtionships(userId, this.currentUserId);
     }
 }
